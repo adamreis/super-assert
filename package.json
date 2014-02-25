@@ -8,7 +8,8 @@
     "line number"
   ],
   "dependencies": {
-    "esprima": "~1.0.4"
+    "esprima": "~1.0.4",
+    "escodegen": "~1.2.0"
   },
   "contributors": [
     {

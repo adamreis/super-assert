@@ -1,6 +1,7 @@
 var ths = 'that';
 var boy = 'boi';
 assert(ths === 'that');
+// assert(assert(ths === 'that'));
 
 // creates a socket.io client for the given server
 function client(srv, nsp, opts){
@@ -16,13 +17,3 @@ function client(srv, nsp, opts){
 }
 
 assert(boy == 'boy' == 'girl');
-
-
-
-
-
-// assertion(ths === 'that', "ths === 'that'")
-
-// assert(some_function(some, parameters) == 'expected_output');
-
-// _a = some_function(some, parameters)

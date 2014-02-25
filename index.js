@@ -1,5 +1,6 @@
 var esprima = require('esprima'),
-  fs = require('fs');
+    fs = require('fs'),
+    escodegen = require('escodegen');
 
 var j;
 
@@ -39,9 +40,17 @@ fs.readFile('./test.js', 'utf8', function (err, data) {
     op = node.expression.arguments[0].operator;
     line = node.expression.callee.loc.start.line;
 
-    console.log('line ' + line + ': assert(<' + ltype + '> ' + lname + ' ' + op + ' <' + rtype + '> ' + rname + ')');
+    assertionText = 'line ' + line + ': assert(<' + ltype + '> ' + lname + ' ' + op + ' <' + rtype + '> ' + rname + ')';
     // console.log(JSON.stringify(node, null, 2) + '\n\n----------\n');
+
+    node.expression.callee.name = 'assertion';
+    node.expression.arguments[1] = {"type":"Literal", "value":assertionText};
   }
   });
-  // console.log(JSON.stringify(syntax, null, 2));
+
+  // console.log(JSON.stringify(j, null, 2));
+
+  console.log('\n-------- original -------\n\n' + data);
+  console.log('\n-------- new -------\n\n' + escodegen.generate(j));
+
 });
