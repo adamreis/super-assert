@@ -1,0 +1,19 @@
+{
+  "name": "super-assert",
+  "version": "0.0.1",
+  "description": "we'll get to this",
+  "keywords": [
+    "assert",
+    "debug",
+    "line number"
+  ],
+  "dependencies": {
+    "esprima": "~1.0.4"
+  },
+  "contributors": [
+    {
+      "name": "Adam Reis",
+      "email": "adamhreis@gmail.com"
+    }
+  ]
+}
