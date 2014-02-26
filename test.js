@@ -1,7 +1,8 @@
 var ths = 'that';
-var boy = 'boi';
-assert(ths === 'that');
-// assert(assert(ths === 'that'));
+var that = 'that';
+assert(ths === 
+        'that'
+        || 'the other thing');
 
 // creates a socket.io client for the given server
 function client(srv, nsp, opts){
@@ -16,4 +17,4 @@ function client(srv, nsp, opts){
   return ioc(url, opts);
 }
 
-assert(boy == 'boy' == 'girl');
+assert(that == 'ths' == 'doge');
