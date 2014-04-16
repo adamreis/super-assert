@@ -4,7 +4,8 @@
 * Comment
 */
 var ths = 'that';
-var that = 'that';
+var that = 'that \
+            long string';
 assert(ths ===
         'that'
         || 'the other thing');
