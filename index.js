@@ -12,7 +12,10 @@ fs.readFile(process.argv[2], 'utf8', function (err, data) {
   if (err) {
     return console.log(err);
   }
-  var ast = esprima.parse(data, { tokens: true, comment: true});
+  var ast = esprima.parse(data, { loc: true,
+                                  tokens: true,
+                                  range: true,
+                                  comment: true});
   ast = escodegen.attachComments(ast, ast.comments, ast.tokens);
   var out_data = escodegen.generate(ast, {comment: true});
   fs.writeFile(process.argv[3], out_data, function (err) {
