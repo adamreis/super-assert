@@ -1,12 +1,15 @@
-
+/*
+* Leading
+* Block
+* Comment
+*/
 var ths = 'that';
 var that = 'that';
-assert(ths === 
+assert(ths ===
         'that'
         || 'the other thing');
 
 // creates a socket.io client for the given server
-// another comment
 function client(srv, nsp, opts){
   if ('object' == typeof nsp) {
     opts = nsp;

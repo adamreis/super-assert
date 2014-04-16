@@ -23,7 +23,6 @@ function traverse(node, func) {
   }
 }
 
-
 function replaceEmptyLines(data) {
   var lines = data.toString().split('\n');
   for(var i=0; i<lines.length; i++) {
