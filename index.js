@@ -65,7 +65,6 @@ function fixMultiLineStatements (ast, data) {
     }
   });
 
-  console.log('=======missed lines==========\n'+missedLines);
   var lines = data.toString().split('\n');
   for (var i = 0 ; i < missedLines.length; i++) {
     lines.splice(missedLines[i] + i - 1, 0, "//");
