@@ -1,4 +1,5 @@
-//TODO: figure out exactly how escodegen deals with newlines, because it definitely separates one line if statements)
+//TODO: figure out exactly how escodegen deals with newlines, because it definitely separates one line if statements
+//TODO: make this importable and usable (rather than just command line)
 var fs = require('fs'),
   esprima = require('esprima'),
   escodegen = require('escodegen');
@@ -57,7 +58,6 @@ function fixMultiLineStatements (ast, data) {
       var start = node.loc.start.line;
       var end = node.loc.end.line;
       if (start != end) {
-        // console.log('---------NODE-------\n'+JSON.stringify(node, null, 2));
         for (var i = start + 1; i <= end; i++) {
           missedLines.push(i);
         }
