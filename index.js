@@ -1,4 +1,3 @@
-//TODO: figure out exactly how escodegen deals with newlines, because it definitely separates one line if statements
 //TODO: make this importable and usable (rather than just command line)
 var fs = require('fs'),
   esprima = require('esprima'),
@@ -9,85 +8,49 @@ if (process.argv.length != 4) {
   process.exit(1);
 }
 
-function replaceEmptyLines(data) {
-  var lines = data.toString().split('\n');
-  for(var i=0; i<lines.length; i++) {
-    if(lines[i]=='') {
-      lines[i]='//';
-    }
-  }
-  lines.push('//');
-  return lines.join('\n');
+String.prototype.splice = function(index, to_remove, s) {
+  return (this.slice(0,index) + s + this.slice(index + Math.abs(to_remove)));
 }
 
-function traverse(node, func) {
-  func(node)
-  for (var key in node) {
-    if (node.hasOwnProperty(key)) {
-      var child = node[key];
-      if (typeof child === 'object' && child !== null) {
-
-        if (Array.isArray(child)) {
-          child.forEach(function(node) {
-            traverse(node, func);
-          });
-        } else {
-          traverse(child, func);
-        }
-      }
-    }
-  }
-}
-
-function addSecondAssertArgument (ast) {
-  traverse(ast, function(node) {
-    if (node.type == 'ExpressionStatement' &&
-        node.expression.callee &&
-        node.expression.callee.name == 'assert'){
-      line = node.expression.callee.loc.start.line;
-      assertionText = 'line ' + line + ': ' + escodegen.generate(node);
-      node.expression.arguments[1] = {"type":"Literal", "value":assertionText};
-    }
-  });
-}
-
-function fixMultiLineStatements (ast, data) {
-  var missedLines = [];
-  traverse(ast, function(node) {
-    if (node.type == 'ExpressionStatement' ) {
-      var start = node.loc.start.line;
-      var end = node.loc.end.line;
-      if (start != end) {
-        for (var i = start + 1; i <= end; i++) {
-          missedLines.push(i);
-        }
-      }
-    }
-  });
-
-  var lines = data.toString().split('\n');
-  for (var i = 0 ; i < missedLines.length; i++) {
-    lines.splice(missedLines[i] + i - 1, 0, "//");
-  }
-  return lines.join('\n');
-}
+String.prototype.addSlashes = function() 
+{ 
+   return this.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
+} 
 
 fs.readFile(process.argv[2], 'utf8', function (err, data) {
   if (err) {
     return console.log(err);
   }
-  data = replaceEmptyLines(data);
-  var ast = esprima.parse(data, { loc: true,
-                                  tokens: true,
-                                  range: true,
-                                  comment: true});
-  ast = escodegen.attachComments(ast, ast.comments, ast.tokens);
-  addSecondAssertArgument(ast);
-  var regeneratedCode = escodegen.generate(ast, {comment: true});
-  var out_data = fixMultiLineStatements(ast, regeneratedCode);
-  fs.writeFile(process.argv[3], out_data, function (err) {
+  var lines = data.toString().split('\n');
+  
+  var i = 0;
+  while (i < lines.length) {
+    assertIndex = lines[i].indexOf('assert');
+    if (assertIndex != -1) {
+      startLine = i+1;
+      assertText = lines[i].trim();
+      var stack = new Array();
+      stack.push('(');
+      var j = lines[i].slice(assertIndex).indexOf('(')+1;
+      while (stack.length > 0) {
+        if (j >= lines[i].length) {
+          i++;
+          j = 0;
+          assertText += lines[i].trim();
+        }
+        if (lines[i][j] == ')') {
+          stack.pop();
+        }
+        j++;
+      }
+      lines[i] = lines[i].splice(j-1, 0, ', \'Line ' + startLine + ': ' + assertText.addSlashes() + '\'');
+    }
+    i++;
+  }
+
+  fs.writeFile(process.argv[3], lines.join('\n'), function (err) {
     if (err) {
-      console.log(err);
+      return console.log(err);
     }
   });
 });
