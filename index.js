@@ -38,7 +38,9 @@ fs.readFile(process.argv[2], 'utf8', function (err, data) {
           j = 0;
           assertText += lines[i].trim();
         }
-        if (lines[i][j] == ')') {
+        if (lines[i][j] == '(') {
+          stack.push('(');
+        }else if (lines[i][j] == ')') {
           stack.pop();
         }
         j++;

@@ -7,7 +7,7 @@ var ths = 'that';
 var that = 'that \
             long string';
 assert(ths ===
-        'that'
+        f('that')
         || 'the other thing');
 
 // creates a socket.io client for the given server
