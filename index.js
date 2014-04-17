@@ -22,21 +22,25 @@ fs.readFile(process.argv[2], 'utf8', function (err, data) {
     return console.log(err);
   }
   var lines = data.toString().split('\n');
-  
   var i = 0;
   while (i < lines.length) {
-    assertIndex = lines[i].indexOf('assert');
+    var assertIndex = lines[i].indexOf('assert');
     if (assertIndex != -1) {
-      startLine = i+1;
+      var startLine = i+1;
       assertText = lines[i].trim();
       var stack = new Array();
-      stack.push('(');
-      var j = lines[i].slice(assertIndex).indexOf('(')+1;
+      stack.push('(')
+      var j = assertIndex + lines[i].slice(assertIndex).indexOf('(')+1;
+        debugger;
       while (stack.length > 0) {
         if (j >= lines[i].length) {
           i++;
           j = 0;
-          assertText += lines[i].trim();
+          try {
+            assertText += lines[i].trim(); 
+          } catch (err) {
+            debugger;
+          }
         }
         if (lines[i][j] == '(') {
           stack.push('(');
@@ -45,6 +49,7 @@ fs.readFile(process.argv[2], 'utf8', function (err, data) {
         }
         j++;
       }
+      debugger;
       lines[i] = lines[i].splice(j-1, 0, ', \'Line ' + startLine + ': ' + assertText.addSlashes() + '\'');
     }
     i++;
